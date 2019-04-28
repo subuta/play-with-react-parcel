@@ -1,0 +1,34 @@
+{
+  "name": "play-with-react-parcel",
+  "version": "1.0.0",
+  "description": "React &amp; parcel testing",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/subuta/play-with-react-parcel.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/subuta/play-with-react-parcel/issues"
+  },
+  "homepage": "https://github.com/subuta/play-with-react-parcel#readme",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "dev": "parcel src/index.html",
+    "start": "cd dist && serve",
+    "build": "npm run clean && parcel build src/index.html"
+  },
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-react": "^7.0.0",
+    "parcel-bundler": "^1.12.3",
+    "serve": "^11.0.0"
+  }
+}
