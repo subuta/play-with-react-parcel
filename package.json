@@ -2,33 +2,66 @@
   "name": "play-with-react-parcel",
   "version": "1.0.0",
   "description": "React &amp; parcel testing",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/subuta/play-with-react-parcel.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "subuta <shunta.3110@gmail.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/subuta/play-with-react-parcel/issues"
   },
   "homepage": "https://github.com/subuta/play-with-react-parcel#readme",
   "scripts": {
     "clean": "rm -rf ./dist",
-    "dev": "parcel src/index.html",
-    "start": "cd dist && serve",
-    "build": "npm run clean && parcel build src/index.html"
+    "generate-imported-component": "imported-components src src/client/imported.js",
+    "dev:client": "parcel watch src/client/index.js",
+    "dev:server": "SERVER=true node -r ./prepare src/server/index.js",
+    "dev": "run-p dev:*",
+    "start": "SERVER=true node -r ./prepare dist/server/server/index.js",
+    "build": "npm run clean && run-p build:*",
+    "build:client": "parcel build src/client/index.js -d dist/client",
+    "build:server": "babel src --out-dir dist/server"
+  },
+  "alias": {
+    "react-dom": "@hot-loader/react-dom"
   },
   "dependencies": {
+    "@hot-loader/react-dom": "^16.8.6",
+    "common-tags": "^1.8.0",
+    "isomorphic-unfetch": "^3.0.0",
+    "koa": "^2.7.0",
+    "koa-body": "^4.1.0",
+    "koa-router": "^7.4.0",
+    "koa-send": "^5.0.0",
+    "koa-static": "^5.0.0",
+    "lodash": "^4.17.11",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "react-helmet": "^5.2.0",
+    "react-hot-loader": "^4.8.4",
+    "react-ssr-prepass": "^1.0.4",
+    "utils": "^0.3.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.4.4",
+    "app-module-path": "^2.2.0",
+    "autoprefixer": "^9.5.1",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "consola": "^2.6.0",
+    "esm": "^3.2.22",
+    "loud-rejection": "^2.1.0",
+    "npm-run-all": "^4.1.5",
     "parcel-bundler": "^1.12.3",
-    "serve": "^11.0.0"
+    "precss": "^4.0.0",
+    "serve": "^11.0.0",
+    "tailwindcss": "^0.7.4"
   }
 }
