@@ -15,6 +15,15 @@ export const getInitialProps = (ctx) => {
   return _.get(ctx, ['state', KEY], {})
 }
 
+// Custom visitor function of react-ssr-prepass for allowing next.js style data fetching.
+export const getInitialPropsVisitor = (ctx) => (element, instance) => {
+  if (element && element.type.getInitialProps) {
+    return element.type.getInitialProps(ctx).then((initialProps) => {
+      setInitialProps(ctx, initialProps)
+    })
+  }
+}
+
 export const getScriptTag = (ctx) => {
   return `<script>${`window.${KEY} = ${JSON.stringify(getInitialProps(ctx))};`}</script>`
 }
