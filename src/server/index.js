@@ -17,18 +17,21 @@ import { renderToString } from 'react-dom/server'
 import ssrPrepass from 'react-ssr-prepass'
 import { Helmet } from 'react-helmet'
 
-import App from 'client/App'
+import App from 'src/client/App'
 import {
   setInitialProps,
   getInitialProps,
   getScriptTag as printInitialPropsScript
-} from 'utils/initialProps'
+} from 'src/utils/initialProps'
+
+import pkgDir from 'pkg-dir'
 
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 
-// FIXME: correct path.
-const STATIC_CLIENT_DIR = path.resolve(__dirname, '../../client')
+const ROOT_DIR = pkgDir.sync()
+
+const STATIC_CLIENT_DIR = path.resolve(ROOT_DIR, './dist/client')
 
 const app = new Koa()
 

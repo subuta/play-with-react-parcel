@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 
 import App from './App'
 
-import { getInitialProps } from '../utils/initialProps'
+import { getInitialProps } from 'src/utils/initialProps'
 
 import './index.css'
 

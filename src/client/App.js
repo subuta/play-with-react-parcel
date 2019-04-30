@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react'
+import React from 'react'
 import fetch from 'isomorphic-unfetch'
 import { Helmet } from 'react-helmet'
 
@@ -6,8 +6,11 @@ import _ from 'lodash'
 
 import { hot } from 'react-hot-loader'
 
-// FIXME: more better syntax.
-const Dynamic = process.env.SERVER ? require('./Dynamic').default : lazy(() => import('./Dynamic'))
+import asLazy from 'src/components/asLazy'
+
+const isServer = typeof window === 'undefined'
+
+const LazyChild = asLazy(isServer ? require('./Child') : () => import('./Child'))
 
 const App = hot(module)((props) => {
   const { id, joke } = props
@@ -21,7 +24,7 @@ const App = hot(module)((props) => {
 
       <h1>{id}:{joke}</h1>
 
-      {process.env.SERVER ? <Dynamic /> : <Suspense fallback={<div>Loading...</div>}><Dynamic /></Suspense>}
+      <LazyChild />
     </div>
   )
 })

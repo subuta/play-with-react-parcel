@@ -16,15 +16,16 @@
   "scripts": {
     "clean": "rm -rf ./dist",
     "generate-imported-component": "imported-components src src/client/imported.js",
-    "dev:client": "parcel watch src/client/index.js",
+    "dev:client": "parcel watch src/client/index.js -d dist/client",
     "dev:server": "SERVER=true node -r ./prepare src/server/index.js",
     "dev": "run-p dev:*",
     "start": "SERVER=true node -r ./prepare dist/server/server/index.js",
     "build": "npm run clean && run-p build:*",
-    "build:client": "parcel build src/client/index.js -d dist/client",
-    "build:server": "babel src --out-dir dist/server"
+    "build:client": "parcel build src/client/index.js src -d dist/client",
+    "build:server": "SERVER=true babel src --out-dir dist/server"
   },
   "alias": {
+    "src": "./src",
     "react-dom": "@hot-loader/react-dom"
   },
   "dependencies": {
@@ -37,6 +38,8 @@
     "koa-send": "^5.0.0",
     "koa-static": "^5.0.0",
     "lodash": "^4.17.11",
+    "module-alias": "^2.2.0",
+    "pkg-dir": "^4.1.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.0",
@@ -52,8 +55,9 @@
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
-    "app-module-path": "^2.2.0",
     "autoprefixer": "^9.5.1",
+    "babel-plugin-add-module-exports": "^1.0.2",
+    "babel-plugin-dynamic-import-node": "^2.2.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "consola": "^2.6.0",
     "esm": "^3.2.22",

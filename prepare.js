@@ -1,4 +1,5 @@
 const path = require('path')
+const moduleAlias = require('module-alias')
 
 global.require = require('esm')(module)
 
@@ -8,12 +9,12 @@ const ROOT_DIR = path.resolve(__dirname, './')
 let baseDir = path.resolve(ROOT_DIR, './dist')
 
 require('loud-rejection/register')
-require('app-module-path').addPath(__dirname)
 
 if (dev) {
-  baseDir = path.resolve(ROOT_DIR, './src')
+  baseDir = path.resolve(ROOT_DIR, 'src')
   require('@babel/register')
   require('@babel/polyfill')
 }
 
-require('app-module-path').addPath(baseDir)
+// Make server-side module resolution compatible with parcel way.
+moduleAlias.addAlias('src', baseDir)
