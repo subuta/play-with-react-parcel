@@ -8,7 +8,7 @@ import logger from 'koa-logger'
 import path from 'path'
 import pkgDir from 'pkg-dir'
 
-import views from './views'
+import views from './server/views.js'
 
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'

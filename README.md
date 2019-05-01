@@ -21,5 +21,5 @@ npm start
 
 - [ ] Integrate Hashmark for cache-busting on production.
 - [ ] Integrate react-router for more practical example.
-- [ ] Integrate Tailwind.css for better DX.
+- [x] Integrate Tailwind.css for better DX.
 - [ ] `/pages` example with getInitialProps style data fetching.

@@ -10,7 +10,7 @@ import {
   getInitialProps,
   getInitialPropsVisitor,
   getScriptTag as printInitialPropsScript
-} from 'src/utils/initialProps'
+} from '/utils/initialProps'
 
 export default async (ctx, App) => {
   // Pre-render App for data fetching.
@@ -33,14 +33,14 @@ export default async (ctx, App) => {
             ${helmet.meta.toString()}
             ${helmet.link.toString()}
             
-            <link rel='stylesheet' href='index.css'>
+            <link rel='stylesheet' href='client-entry.css'>
             <meta charset='utf-8'>
         </head>
         <body ${helmet.bodyAttributes.toString()}>
             <div id='app'>${content}</div>
             
             ${printInitialPropsScript(ctx)}
-            <script src='index.js'></script>
+            <script src='client-entry.js'></script>
         </body>
     </html>
   `

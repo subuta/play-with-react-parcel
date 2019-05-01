@@ -1,13 +1,11 @@
-import '@babel/polyfill'
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import App from './App'
+import App from '/client/App'
 
 import { getInitialProps } from '/utils/initialProps'
 
-import './index.css'
+import '/client/index.css'
 
 ReactDOM.hydrate(
   <App {...getInitialProps()} />,

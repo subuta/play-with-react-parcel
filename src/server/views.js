@@ -1,7 +1,7 @@
 import Router from 'koa-router'
 import ssr from './ssr'
 
-import App from 'src/client/App'
+import App from '/client/App'
 
 const router = new Router()
 

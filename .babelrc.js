@@ -11,7 +11,10 @@ const plugins = [
       'loose': true
     }
   ],
-  'babel-plugin-add-module-exports'
+  ['@babel/plugin-transform-runtime', {
+    'corejs': 2
+  }],
+  'astroturf/plugin'
 ]
 
 if (process.env.SERVER) {

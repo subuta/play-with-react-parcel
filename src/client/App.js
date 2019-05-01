@@ -6,11 +6,20 @@ import _ from 'lodash'
 
 import { hot } from 'react-hot-loader'
 
-import asLazy from 'src/components/asLazy'
+import asLazy from '/components/asLazy'
+
+import { css } from 'astroturf'
 
 const isServer = typeof window === 'undefined'
 
-const LazyChild = asLazy(isServer ? require('./Child') : () => import('./Child'))
+const LazyChild = asLazy(isServer ? require('./Child.js') : () => import('./Child.js'))
+
+// language=PostCSS
+const styles = css`
+  .joke {
+    @apply font-bold;
+  }
+`
 
 const App = hot(module)((props) => {
   const { id, joke } = props
@@ -22,7 +31,7 @@ const App = hot(module)((props) => {
         <meta name='description' content={joke} />
       </Helmet>
 
-      <h1>{id}:{joke}</h1>
+      <h1 className={styles.joke}>{id}:{joke}</h1>
 
       <LazyChild />
     </div>
