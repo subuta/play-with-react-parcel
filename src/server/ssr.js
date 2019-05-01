@@ -48,20 +48,20 @@ export default async (ctx, App) => {
   return source`
     <!DOCTYPE html>
     <html ${helmet.htmlAttributes.toString()}>
-        <head>
-            ${helmet.title.toString()}
-            ${helmet.meta.toString()}
-            ${helmet.link.toString()}
-            
-            <link rel='stylesheet' href='${resolveAssets('client.css')}'>
-            <meta charset='utf-8'>
-        </head>
-        <body ${helmet.bodyAttributes.toString()}>
-            <div id='app'>${content}</div>
-            
-            ${printInitialPropsScript(ctx)}
-            <script src='${resolveAssets('client.js')}'></script>
-        </body>
+      <head>
+        ${helmet.title.toString()}
+        ${helmet.meta.toString()}
+        ${helmet.link.toString()}
+        
+        <link rel='stylesheet' href='${resolveAssets('client.css')}'>
+        <meta charset='utf-8'>
+      </head>
+      <body ${helmet.bodyAttributes.toString()}>
+        <div id='app'>${content}</div>
+        
+        ${printInitialPropsScript(ctx)}
+        <script src='${resolveAssets('client.js')}'></script>
+      </body>
     </html>
   `
 }
