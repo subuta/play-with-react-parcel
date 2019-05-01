@@ -6,13 +6,13 @@ import _ from 'lodash'
 
 import { hot } from 'react-hot-loader'
 
-import asLazy from '/components/asLazy'
+import lazy from '/utils/lazy'
 
 import { css } from 'astroturf'
 
 const isServer = typeof window === 'undefined'
 
-const LazyChild = asLazy(isServer ? require('./Child.js') : () => import('./Child.js'))
+const LazyChild = lazy(isServer ? require('./Child.js') : () => import('./Child.js'))
 
 // language=PostCSS
 const styles = css`

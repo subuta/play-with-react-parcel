@@ -4,10 +4,13 @@ import ReactDOM from 'react-dom'
 import App from '/client/App'
 
 import { getInitialProps } from '/utils/initialProps'
+import { prefetch } from '/utils/lazy'
 
 import '/client/index.css'
 
-ReactDOM.hydrate(
-  <App {...getInitialProps()} />,
-  document.getElementById('app')
-)
+prefetch().then(() => {
+  ReactDOM.hydrate(
+    <App {...getInitialProps()} />,
+    document.getElementById('app')
+  )
+})

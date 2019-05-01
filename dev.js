@@ -50,14 +50,14 @@ const restartServer = _.debounce(async () => {
   }
 
   // Fork new server.
-  server = fork(require.resolve('./dist/server/server-entry.js'))
+  server = fork(require.resolve('./dist/server/server.js'))
 
   consola.info('Restarted server.')
 }, 200)
 
 const main = async () => {
   const bundler = new Bundler([
-    'src/server-entry.js'
+    'src/server.js'
   ], {
     ...options,
     outDir: 'dist/server',
@@ -79,7 +79,7 @@ exitHook(async (cb) => {
     return process.exit(1)
   })
 
-  console.info('Goodbye.')
+  console.info('Goodbye.\r\n')
   cb()
   process.exit(0)
 })

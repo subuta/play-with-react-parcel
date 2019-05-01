@@ -33,14 +33,14 @@ export default async (ctx, App) => {
             ${helmet.meta.toString()}
             ${helmet.link.toString()}
             
-            <link rel='stylesheet' href='client-entry.css'>
+            <link rel='stylesheet' href='/client.css'>
             <meta charset='utf-8'>
         </head>
         <body ${helmet.bodyAttributes.toString()}>
             <div id='app'>${content}</div>
             
             ${printInitialPropsScript(ctx)}
-            <script src='client-entry.js'></script>
+            <script src='/client.js'></script>
         </body>
     </html>
   `
