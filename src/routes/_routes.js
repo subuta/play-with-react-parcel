@@ -1,19 +1,16 @@
-// Cannot use import statement on build-time(codegen) phase.
-// SEE: https://github.com/kentcdodds/babel-plugin-codegen
+import codegen from 'babel-plugin-codegen/macro'
 
-const codegen = require('babel-plugin-codegen/macro')
-
-const React = require('react')
-const _ = require('lodash')
-
-const lazy = require('/utils/lazy').default
+import React from 'react'
+import _ from 'lodash'
+import lazy from '/utils/lazy'
 
 const isServer = typeof window === 'undefined'
 
-// Load generated lazy-components.
+// Swap routes into lazy-components code.
+// SEE: https://github.com/kentcdodds/babel-plugin-codegen
 const routes = codegen.require('../utils/dynamicRoutes.js')
 
-module.exports = () => (
+export default () => (
   <React.Fragment>
     {_.map(routes, (Route, i) => (
       <Route key={i} />
