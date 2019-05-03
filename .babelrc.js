@@ -14,7 +14,8 @@ const plugins = [
   ['@babel/plugin-transform-runtime', {
     'corejs': 2
   }],
-  'astroturf/plugin'
+  'astroturf/plugin',
+  'macros'
 ]
 
 if (process.env.SERVER) {

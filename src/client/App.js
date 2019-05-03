@@ -10,9 +10,7 @@ import lazy from '/utils/lazy'
 
 import { css } from 'astroturf'
 
-const isServer = typeof window === 'undefined'
-
-const LazyChild = lazy(isServer ? require('./Child.js') : () => import('./Child.js'))
+import Routes from '../routes/_routes'
 
 // language=PostCSS
 const styles = css`
@@ -33,7 +31,7 @@ const App = hot(module)((props) => {
 
       <h1 className={styles.joke}>{id}:{joke}</h1>
 
-      <LazyChild />
+      <Routes />
     </div>
   )
 })

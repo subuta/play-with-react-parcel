@@ -8,9 +8,14 @@ import { prefetch } from '/utils/lazy'
 
 import '/client/index.css'
 
-prefetch().then(() => {
-  ReactDOM.hydrate(
-    <App {...getInitialProps()} />,
-    document.getElementById('app')
-  )
-})
+// prefetch().then(() => {
+//   ReactDOM.hydrate(
+//     <App {...getInitialProps()} />,
+//     document.getElementById('app')
+//   )
+// })
+
+ReactDOM.hydrate(
+  <App {...getInitialProps()} />,
+  document.getElementById('app')
+)

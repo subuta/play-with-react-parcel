@@ -5,16 +5,14 @@ import koaBody from 'koa-body'
 import serve from 'koa-static'
 import logger from 'koa-logger'
 
-import path from 'path'
-import pkgDir from 'pkg-dir'
-
 import views from './server/views.js'
+
+import {
+  STATIC_CLIENT_DIR
+} from './server/config'
 
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
-
-const ROOT_DIR = pkgDir.sync()
-const STATIC_CLIENT_DIR = path.resolve(ROOT_DIR, './dist/client')
 
 const app = new Koa()
 

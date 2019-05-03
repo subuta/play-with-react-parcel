@@ -10,6 +10,7 @@ import kill from 'tree-kill'
 import consola from 'consola'
 
 import fork from './src/server/utils/fork'
+import generateRoutesJson from './src/server/utils/generateRoutesJson'
 
 const aKill = promisify(kill)
 
@@ -37,13 +38,19 @@ const options = {
   hmrPort: 0, // The port the HMR socket runs on, defaults to a random free port (0 in node.js resolves to a random free port)
   sourceMaps: true, // Enable or disable sourcemaps, defaults to enabled (minified builds currently always create sourcemaps)
   hmrHostname: '', // A hostname for hot module reload, default to ''
-  detailedReport: false // Prints a detailed report of the bundles, assets, filesizes and times, defaults to false, reports are only printed if watch is disabled
+  detailedReport: false, // Prints a detailed report of the bundles, assets, filesizes and times, defaults to false, reports are only printed if watch is disabled
+  ignored: [
+    /json/
+  ]
 }
 
 let server = null
 
+// Generate routes.json for /routes rendering.
+generateRoutesJson()
+
 // Restart bundled server process.
-const restartServer = _.debounce(async () => {
+const restartServer = _.debounce(async (e) => {
   // Kill old process.
   if (server) {
     await aKill(server.pid)
