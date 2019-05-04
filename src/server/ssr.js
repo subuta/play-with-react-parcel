@@ -4,17 +4,27 @@ import { renderToString } from 'react-dom/server'
 import ssrPrepass from 'react-ssr-prepass'
 import { Helmet } from 'react-helmet'
 
+import _ from 'lodash'
 import { source } from 'common-tags'
 
 import fs from 'fs'
 import path from 'path'
 import pkgDir from 'pkg-dir'
 
+import { StaticRouter } from 'react-router-dom'
+
 import {
   getInitialProps,
   getInitialPropsVisitor,
   getScriptTag as printInitialPropsScript
 } from '/utils/initialProps'
+
+import { findRoute } from '/routes/_routes'
+import {
+  LazyContext,
+  prefetchComponent,
+  getScriptTag as printPrefetchedModulePaths
+} from '/utils/lazy'
 
 const dev = process.env.NODE_ENV !== 'production'
 
@@ -33,12 +43,47 @@ const resolveAssets = (filePath) => {
 }
 
 export default async (ctx, App) => {
+  // This context object contains the results of the render
+  const context = {}
+
+  // Ignore unknown route.
+  // FIXME: Better 404 handling.
+  const route = findRoute(ctx.url)
+  if (!route) return
+
+  const modulePath = _.trimStart(route.path, '/')
+  const Component = await prefetchComponent(modulePath)
+
+  const ServerApp = (props) => (
+    <StaticRouter
+      location={ctx.url}
+      context={context}
+    >
+      <LazyContext.Provider value={{
+        prefetched: {
+          [modulePath]: Component
+        }
+      }}>
+        <App {...props} />
+      </LazyContext.Provider>
+    </StaticRouter>
+  )
+
   // Pre-render App for data fetching.
-  await ssrPrepass(<App />, getInitialPropsVisitor(ctx))
+  await ssrPrepass(
+    <ServerApp />
+    , getInitialPropsVisitor(ctx)
+  )
+
+  // context.url will contain the URL to redirect to if a <Redirect> was used
+  if (context.url) {
+    ctx.redirect(context.url)
+    return
+  }
 
   // Render App
   const content = renderToString(
-    <App {...getInitialProps(ctx)} />
+    <ServerApp {...getInitialProps(ctx)} />
   )
 
   // Render helmet related codes(head tag)
@@ -60,6 +105,7 @@ export default async (ctx, App) => {
         <div id='app'>${content}</div>
         
         ${printInitialPropsScript(ctx)}
+        ${printPrefetchedModulePaths([modulePath])}
         <script src='${resolveAssets('client.js')}'></script>
       </body>
     </html>

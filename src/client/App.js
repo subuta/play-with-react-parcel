@@ -10,7 +10,8 @@ import lazy from '/utils/lazy'
 
 import { css } from 'astroturf'
 
-import Routes from '../routes/_routes'
+import Layout from '/components/Layout'
+import Routes from '/routes/_routes'
 
 // language=PostCSS
 const styles = css`
@@ -31,7 +32,9 @@ const App = hot(module)((props) => {
 
       <h1 className={styles.joke}>{id}:{joke}</h1>
 
-      <Routes />
+      <Layout>
+        <Routes />
+      </Layout>
     </div>
   )
 })
