@@ -13,7 +13,7 @@ import pkgDir from 'pkg-dir'
 
 import { StaticRouter } from 'react-router-dom'
 
-import getRoute from './utils/routes'
+import getRoute from '/utils/routes'
 
 import {
   getPrefetchedInitialProps,
@@ -27,7 +27,7 @@ import {
 } from '/utils/lazy'
 
 import {
-  UniversalContext
+  Provider as UniversalProvider
 } from '/utils/universal'
 
 const dev = process.env.NODE_ENV !== 'production'
@@ -55,7 +55,7 @@ export default async (ctx, App) => {
 
   // Ignore unknown route.
   // FIXME: Better 404 handling.
-  const found = getRoute(ctx)
+  const found = getRoute(ctx.url)
   if (!found) return
 
   const { route, routerProps } = found
@@ -73,11 +73,11 @@ export default async (ctx, App) => {
 
   // Pre-render App for data fetching.
   await ssrPrepass(
-    <UniversalContext.Provider value={{
+    <UniversalProvider value={{
       prefetched: { [route.modulePath]: Component }
     }}>
       <ServerApp />
-    </UniversalContext.Provider>
+    </UniversalProvider>
     , getInitialPropsVisitor(ctx, routerProps)
   )
 
@@ -92,12 +92,12 @@ export default async (ctx, App) => {
 
   // Render App
   const content = renderToString(
-    <UniversalContext.Provider value={{
+    <UniversalProvider value={{
       prefetched: { [route.modulePath]: Component },
       initialProps: getPrefetchedInitialProps(ctx)
     }}>
       <ServerApp />
-    </UniversalContext.Provider>
+    </UniversalProvider>
   )
 
   // Render helmet related codes(head tag)

@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { getPrefetchedInitialProps } from '/utils/initialProps'
 import { prefetch } from '/utils/lazy'
-import { UniversalContext } from '/utils/universal'
+import { Provider as UniversalProvider } from '/utils/universal'
 
 import '/client/index.css'
 
@@ -16,12 +16,12 @@ const main = async () => {
 
   ReactDOM.hydrate(
     <BrowserRouter>
-      <UniversalContext.Provider value={{
+      <UniversalProvider value={{
         prefetched,
         initialProps: getPrefetchedInitialProps()
       }}>
         <App />
-      </UniversalContext.Provider>
+      </UniversalProvider>
     </BrowserRouter>,
     document.getElementById('app')
   )

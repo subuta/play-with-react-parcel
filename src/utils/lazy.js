@@ -3,7 +3,7 @@ import Promise from 'bluebird'
 import _ from 'lodash'
 
 import {
-  UniversalContext
+  Consumer as UniversalConsumer
 } from './universal'
 
 const KEY = '__LAZY__'
@@ -52,7 +52,7 @@ export default (factory, modulePath) => {
 
   return () => {
     return (
-      <UniversalContext.Consumer>
+      <UniversalConsumer>
         {({ prefetched }) => {
           // FIXME: Remove these workarounds when React.{Suspense,Lazy} supports SSR.
           // Skip suspense if component already prefetched.
@@ -75,7 +75,7 @@ export default (factory, modulePath) => {
             </Suspense>
           )
         }}
-      </UniversalContext.Consumer>
+      </UniversalConsumer>
     )
   }
 }

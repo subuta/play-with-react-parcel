@@ -28,6 +28,7 @@ module.exports = `
     ${_.map(routes, ({ path, exact, modulePath }) => `{
       path: '${path}',
       Component: lazy(() => import('./${modulePath}'), '${modulePath}'),
+      prefetch: () => import('./${modulePath}'),
       exact: ${exact},
       modulePath: '${modulePath}'
     }`)}
