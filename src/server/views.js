@@ -5,7 +5,7 @@ import App from '/client/App'
 
 const router = new Router()
 
-// GET /
+// Render all routes by SSR module.
 router.get('/*', async (ctx) => {
   ctx.body = await ssr(ctx, App)
 })

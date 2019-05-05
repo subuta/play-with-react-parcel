@@ -68,6 +68,7 @@ export const withInitialProps = (moduleId, getInitialProps) => (Component) => {
               // For better memory-usage.
               contextProps.cleanUnusedInitialProps()
 
+              // Skip if already prefetched.
               if (this.props.initialProps) return
 
               // Show loader.

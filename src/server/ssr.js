@@ -54,7 +54,6 @@ export default async (ctx, App) => {
   const context = {}
 
   // Ignore unknown route.
-  // FIXME: Better 404 handling.
   const found = getRoute(ctx.url)
   if (!found) return
 
@@ -86,9 +85,6 @@ export default async (ctx, App) => {
     ctx.redirect(context.url)
     return
   }
-
-  // TODO: サーバ側でwithInitialPropsにctxを渡す方法を探す。(context経由が良さそう？)
-  // TODO: matchの値が変なのの修正 -> withRouterの評価タイミング？
 
   // Render App
   const content = renderToString(

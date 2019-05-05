@@ -6,7 +6,6 @@ import { createLocation } from 'history'
 
 export default (url) => {
   // Ignore unknown route.
-  // FIXME: Better 404 handling.
   const route = findRoute(url)
   // console.log(ctx.url, 'route = ', route)
   if (!route) return
