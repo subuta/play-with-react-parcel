@@ -5,9 +5,17 @@ import { css } from 'astroturf'
 
 // language=PostCSS
 const styles = css`
+  :global {
+    body {
+      @apply p-4;
+    }
+  }
+  
   .links {
+    @apply mb-4;
+    
     & a {
-      @apply mx-4;
+      @apply inline-block p-4;
     }
   }
 `

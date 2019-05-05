@@ -8,6 +8,6 @@ const getInitialProps = async function (props) {
 
 export default withInitialProps(module.id, getInitialProps)(() => {
   return (
-    <h1>index!</h1>
+    <h3>Will get some jokes from <code>http://www.icndb.com/api/</code></h3>
   )
 })

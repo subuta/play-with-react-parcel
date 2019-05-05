@@ -7,6 +7,10 @@ import {
   withStateHandlers,
 } from 'recompose'
 
+import {
+  getUrl
+} from '/utils/initialProps'
+
 const UniversalContext = React.createContext({
   prefetched: {},
   initialProps: {},
@@ -37,14 +41,12 @@ const enhance = compose(
         }
       },
 
-      omitInitialProps: (state) => (keyToOmit) => {
-        console.log(state.initialProps, keyToOmit)
+      cleanUnusedInitialProps: (state) => () => {
+        // Only keep current url's initialProps.
+        const nextProps = _.pickBy(state.initialProps, (value, key) => _.startsWith(key, getUrl(window.location)))
 
-        const nextProps = _.omitBy(state.initialProps, (value, key) => _.startsWith(key, keyToOmit))
-
+        // Ignore no-changes.
         if (_.isEqual(state.initialProps, nextProps)) return
-
-        console.log('diff!', nextProps)
 
         return {
           initialProps: nextProps

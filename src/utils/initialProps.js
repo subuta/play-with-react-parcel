@@ -33,7 +33,7 @@ export const getPrefetchedInitialProps = (ctx) => {
 // Loader component.
 const withLoader = branch(
   ({ isLoading }) => isLoading,
-  renderComponent(() => null),
+  renderComponent(() => <div>...loading</div>),
   _.identity
 )
 
@@ -65,6 +65,9 @@ export const withInitialProps = (moduleId, getInitialProps) => (Component) => {
                 setInitialProps
               } = this.props
 
+              // For better memory-usage.
+              contextProps.cleanUnusedInitialProps()
+
               if (this.props.initialProps) return
 
               // Show loader.
@@ -72,12 +75,19 @@ export const withInitialProps = (moduleId, getInitialProps) => (Component) => {
 
               const initialProps = await getInitialProps(this.props)
 
+              // Skip update state if unmounted.
+              if (this.unmounted) return
+
               // Hide loader and show component.
               setInitialProps({
                 [moduleId]: initialProps
               })
 
               doneLoading()
+            },
+
+            componentWillUnmount () {
+              this.unmounted = true
             }
           }),
           withLoader

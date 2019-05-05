@@ -77,7 +77,7 @@ export default enhance((props) => {
       {(contextProps) => {
         return (
           <a
-            onMouseEnter={() => doPrefetch(contextProps)}
+            onMouseEnter={() => doPrefetch()}
             onClick={(e) => go(e, contextProps)}
             href={rest.to}
           >

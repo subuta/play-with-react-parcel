@@ -20,6 +20,6 @@ npm start
 #### TODO
 
 - [x] Integrate Hashmark for cache-busting on production.
-- [ ] Integrate react-router for more practical example.
+- [x] Integrate react-router for more practical example.
 - [x] Integrate Tailwind.css for better DX.
-- [ ] `/pages` example with getInitialProps style data fetching.
+- [x] `/routes` example with getInitialProps style data fetching.

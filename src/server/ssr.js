@@ -112,6 +112,7 @@ export default async (ctx, App) => {
         ${helmet.meta.toString()}
         ${helmet.link.toString()}
         
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
         <link rel='stylesheet' href='/${resolveAssets('client.css')}'>
         <meta charset='utf-8'>
       </head>

@@ -22,7 +22,7 @@ export default withInitialProps(module.id, getInitialProps)((props) => {
         <meta name='description' content={joke} />
       </Helmet>
 
-      <h1>{joke}</h1>
+      <h3>{joke}</h3>
     </>
   )
 })
