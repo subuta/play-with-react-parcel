@@ -2,6 +2,6 @@ import React from 'react'
 
 export default () => {
   return (
-    <h1>hoge</h1>
+    <h1>index!</h1>
   )
 }

@@ -21,11 +21,10 @@
     "dev": "run-p dev:client dev:server",
     "start": "NODE_ENV=production SERVER=true node dist/server/server.js",
     "hash": "hashmark --cwd dist/client -d md5 -l 8 '**/*.{js,css}' '{name}.{hash}{ext}' --asset-map assets.json",
-    "build": "npm run clean && npm run build:routes && run-p build:client build:server",
+    "build": "npm run clean && run-p build:client build:server",
     "postbuild": "run-p hash",
     "build:client": "parcel build src/client.js -d dist/client",
-    "build:server": "SERVER=true parcel build src/server.js --target=node -d dist/server",
-    "build:routes": "NODE_PATH=./src SERVER=true node -r esm src/server/utils/generateRoutesJson.js"
+    "build:server": "SERVER=true parcel build src/server.js --target=node -d dist/server"
   },
   "alias": {
     "react-dom": "@hot-loader/react-dom"
@@ -79,8 +78,10 @@
     "postcss-import": "^12.0.1",
     "postcss-modules": "^1.4.1",
     "precss": "^4.0.0",
+    "sane": "^4.1.0",
     "serve": "^11.0.0",
     "tailwindcss": "^0.7.4",
+    "touch": "^3.1.0",
     "tree-kill": "^1.2.1"
   }
 }

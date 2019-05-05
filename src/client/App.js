@@ -40,12 +40,13 @@ const App = hot(module)((props) => {
 })
 
 App.getInitialProps = async function (ctx) {
-  const id = Number(ctx.params.id || '123')
-  const jokes = await fetch(`http://api.icndb.com/jokes/${id}`).then((res) => res.json())
-
-  const value = _.get(jokes, 'value')
-
-  return { id: value.id, joke: value.joke }
+  // const id = Number(ctx.params.id || '123')
+  // const jokes = await fetch(`http://api.icndb.com/jokes/${id}`).then((res) => res.json())
+  //
+  // const value = _.get(jokes, 'value')
+  //
+  // return { id: value.id, joke: value.joke }
+  return {}
 }
 
 export default App

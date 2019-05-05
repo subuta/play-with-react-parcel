@@ -8,9 +8,16 @@ import { promisify } from 'bluebird'
 import exitHook from 'async-exit-hook'
 import kill from 'tree-kill'
 import consola from 'consola'
+import sane from 'sane'
+import touch from 'touch'
+import path from 'path'
 
 import fork from './src/server/utils/fork'
 import generateRoutesJson from './src/server/utils/generateRoutesJson'
+
+import {
+  ROUTES_DIR
+} from './src/server/config'
 
 const aKill = promisify(kill)
 
@@ -46,6 +53,8 @@ const options = {
 
 let server = null
 
+const DEBOUNCE_DELAY = 200
+
 // Generate routes.json for /routes rendering.
 generateRoutesJson()
 
@@ -60,7 +69,7 @@ const restartServer = _.debounce(async (e) => {
   server = fork(require.resolve('./dist/server/server.js'))
 
   consola.info('Restarted server.')
-}, 200)
+}, DEBOUNCE_DELAY)
 
 const main = async () => {
   const bundler = new Bundler([
@@ -72,6 +81,21 @@ const main = async () => {
   })
 
   bundler.on('buildEnd', restartServer)
+
+  consola.debug(`Start watching changes for routes.`)
+
+  // Watch for /routes changes.
+  const watcher = sane(ROUTES_DIR)
+
+  const onChange = _.debounce(() => {
+    // Touch route entryPoint for trigger re-bundle.
+    touch.sync(path.resolve(ROUTES_DIR, './_routes.js'))
+  }, DEBOUNCE_DELAY)
+
+  watcher.on('ready', () => {
+    watcher.on('add', onChange)
+    watcher.on('delete', onChange)
+  })
 
   await bundler.bundle()
 }

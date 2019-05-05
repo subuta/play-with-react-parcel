@@ -43,6 +43,9 @@ const resolveAssets = (filePath) => {
 }
 
 export default async (ctx, App) => {
+  // Ignore request with file extension.
+  if (ctx.url.split('.').length > 1) return
+
   // This context object contains the results of the render
   const context = {}
 
@@ -51,8 +54,7 @@ export default async (ctx, App) => {
   const route = findRoute(ctx.url)
   if (!route) return
 
-  const modulePath = _.trimStart(route.path, '/')
-  const Component = await prefetchComponent(modulePath)
+  const Component = await prefetchComponent(route.modulePath)
 
   const ServerApp = (props) => (
     <StaticRouter
@@ -61,7 +63,7 @@ export default async (ctx, App) => {
     >
       <LazyContext.Provider value={{
         prefetched: {
-          [modulePath]: Component
+          [route.modulePath]: Component
         }
       }}>
         <App {...props} />
@@ -98,15 +100,15 @@ export default async (ctx, App) => {
         ${helmet.meta.toString()}
         ${helmet.link.toString()}
         
-        <link rel='stylesheet' href='${resolveAssets('client.css')}'>
+        <link rel='stylesheet' href='/${resolveAssets('client.css')}'>
         <meta charset='utf-8'>
       </head>
       <body ${helmet.bodyAttributes.toString()}>
         <div id='app'>${content}</div>
         
         ${printInitialPropsScript(ctx)}
-        ${printPrefetchedModulePaths([modulePath])}
-        <script src='${resolveAssets('client.js')}'></script>
+        ${printPrefetchedModulePaths([route.modulePath])}
+        <script src='/${resolveAssets('client.js')}'></script>
       </body>
     </html>
   `
