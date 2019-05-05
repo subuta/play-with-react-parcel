@@ -2,13 +2,13 @@ import React, { Suspense } from 'react'
 import Promise from 'bluebird'
 import _ from 'lodash'
 
+import {
+  UniversalContext
+} from './universal'
+
 const KEY = '__LAZY__'
 
 let lazyComponents = new Map()
-
-const LazyContext = React.createContext({
-  prefetched: {}
-})
 
 const resolveDefaultExports = (module) => module.default || module
 
@@ -38,7 +38,6 @@ const getScriptTag = (modulePaths = []) => {
 }
 
 export {
-  LazyContext,
   getScriptTag,
   prefetchComponent,
   prefetch
@@ -53,7 +52,7 @@ export default (factory, modulePath) => {
 
   return () => {
     return (
-      <LazyContext.Consumer>
+      <UniversalContext.Consumer>
         {({ prefetched }) => {
           // FIXME: Remove these workarounds when React.{Suspense,Lazy} supports SSR.
           // Skip suspense if component already prefetched.
@@ -76,7 +75,7 @@ export default (factory, modulePath) => {
             </Suspense>
           )
         }}
-      </LazyContext.Consumer>
+      </UniversalContext.Consumer>
     )
   }
 }

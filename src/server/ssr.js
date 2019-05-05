@@ -13,18 +13,22 @@ import pkgDir from 'pkg-dir'
 
 import { StaticRouter } from 'react-router-dom'
 
+import getRoute from './utils/routes'
+
 import {
-  getInitialProps,
+  getPrefetchedInitialProps,
   getInitialPropsVisitor,
   getScriptTag as printInitialPropsScript
 } from '/utils/initialProps'
 
-import { findRoute } from '/routes/_routes'
 import {
-  LazyContext,
   prefetchComponent,
   getScriptTag as printPrefetchedModulePaths
 } from '/utils/lazy'
+
+import {
+  UniversalContext
+} from '/utils/universal'
 
 const dev = process.env.NODE_ENV !== 'production'
 
@@ -51,8 +55,10 @@ export default async (ctx, App) => {
 
   // Ignore unknown route.
   // FIXME: Better 404 handling.
-  const route = findRoute(ctx.url)
-  if (!route) return
+  const found = getRoute(ctx)
+  if (!found) return
+
+  const { route, routerProps } = found
 
   const Component = await prefetchComponent(route.modulePath)
 
@@ -61,20 +67,18 @@ export default async (ctx, App) => {
       location={ctx.url}
       context={context}
     >
-      <LazyContext.Provider value={{
-        prefetched: {
-          [route.modulePath]: Component
-        }
-      }}>
-        <App {...props} />
-      </LazyContext.Provider>
+      <App {...props} />
     </StaticRouter>
   )
 
   // Pre-render App for data fetching.
   await ssrPrepass(
-    <ServerApp />
-    , getInitialPropsVisitor(ctx)
+    <UniversalContext.Provider value={{
+      prefetched: { [route.modulePath]: Component }
+    }}>
+      <ServerApp />
+    </UniversalContext.Provider>
+    , getInitialPropsVisitor(ctx, routerProps)
   )
 
   // context.url will contain the URL to redirect to if a <Redirect> was used
@@ -83,9 +87,17 @@ export default async (ctx, App) => {
     return
   }
 
+  // TODO: サーバ側でwithInitialPropsにctxを渡す方法を探す。(context経由が良さそう？)
+  // TODO: matchの値が変なのの修正 -> withRouterの評価タイミング？
+
   // Render App
   const content = renderToString(
-    <ServerApp {...getInitialProps(ctx)} />
+    <UniversalContext.Provider value={{
+      prefetched: { [route.modulePath]: Component },
+      initialProps: getPrefetchedInitialProps(ctx)
+    }}>
+      <ServerApp />
+    </UniversalContext.Provider>
   )
 
   // Render helmet related codes(head tag)

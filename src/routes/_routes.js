@@ -17,6 +17,7 @@ const routes = codegen.require('../utils/dynamicRoutes.js')
 
 // Find single route from dynamicRoutes.
 export const findRoute = (pathname) => _.find(routes, (route) => matchPath(pathname, _.pick(route, ROUTE_PROPS)))
+export const matchRoute = (pathname, route) => matchPath(pathname, _.pick(route, ROUTE_PROPS))
 
 export default () => (
   <Switch>

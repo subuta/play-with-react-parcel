@@ -5,11 +5,9 @@ import App from '/client/App'
 
 import { BrowserRouter } from 'react-router-dom'
 
-import { getInitialProps } from '/utils/initialProps'
-import {
-  prefetch,
-  LazyContext
-} from '/utils/lazy'
+import { getPrefetchedInitialProps } from '/utils/initialProps'
+import { prefetch } from '/utils/lazy'
+import { UniversalContext } from '/utils/universal'
 
 import '/client/index.css'
 
@@ -18,9 +16,12 @@ const main = async () => {
 
   ReactDOM.hydrate(
     <BrowserRouter>
-      <LazyContext.Provider value={{ prefetched }}>
-        <App {...getInitialProps()} />
-      </LazyContext.Provider>
+      <UniversalContext.Provider value={{
+        prefetched,
+        initialProps: getPrefetchedInitialProps()
+      }}>
+        <App />
+      </UniversalContext.Provider>
     </BrowserRouter>,
     document.getElementById('app')
   )
