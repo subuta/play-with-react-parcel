@@ -23,8 +23,8 @@
     "hash": "hashmark --cwd dist/client -d md5 -l 8 '**/*.{js,css}' '{name}.{hash}{ext}' --asset-map assets.json",
     "build": "npm run clean && run-p build:client build:server",
     "postbuild": "run-p hash",
-    "build:client": "parcel build src/client.js -d dist/client",
-    "build:server": "SERVER=true parcel build src/server.js --target=node -d dist/server"
+    "build:client": "parcel build src/client.js --no-cache -d dist/client",
+    "build:server": "SERVER=true parcel build src/server.js --target=node --no-cache -d dist/server"
   },
   "alias": {
     "react-dom": "@hot-loader/react-dom"
@@ -54,6 +54,7 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-ssr-prepass": "^1.0.4",
+    "recompose": "^0.30.0",
     "utils": "^0.3.1"
   },
   "devDependencies": {

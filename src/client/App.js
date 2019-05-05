@@ -6,8 +6,6 @@ import { css } from 'astroturf'
 import Layout from '/components/Layout'
 import Routes from '/routes/_routes'
 
-import lazy from '/utils/lazy'
-
 // language=PostCSS
 const styles = css`
   .joke {
