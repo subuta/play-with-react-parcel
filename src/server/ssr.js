@@ -80,12 +80,6 @@ export default async (ctx, App) => {
     , getInitialPropsVisitor(ctx, routerProps)
   )
 
-  // context.url will contain the URL to redirect to if a <Redirect> was used
-  if (context.url) {
-    ctx.redirect(context.url)
-    return
-  }
-
   // Render App
   const content = renderToString(
     <UniversalProvider value={{
@@ -98,6 +92,12 @@ export default async (ctx, App) => {
 
   // Render helmet related codes(head tag)
   const helmet = Helmet.renderStatic()
+
+  // context.url will contain the URL to redirect to if a <Redirect> was used
+  if (context.url) {
+    ctx.redirect(context.url)
+    return
+  }
 
   // Return HTML
   return source`
