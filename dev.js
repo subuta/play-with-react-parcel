@@ -11,13 +11,16 @@ import consola from 'consola'
 import sane from 'sane'
 import touch from 'touch'
 import path from 'path'
+import http from 'http'
+import httpProxy from 'http-proxy'
+import pDebounce from 'p-debounce'
+
+import getPort from 'get-port'
+import isPortReachable from 'is-port-reachable'
 
 import fork from './src/server/utils/fork'
-import generateRoutesJson from './src/server/utils/generateRoutesJson'
 
-import {
-  ROUTES_DIR
-} from './src/server/config'
+import { ROUTES_DIR } from './src/server/config'
 
 const aKill = promisify(kill)
 
@@ -52,26 +55,72 @@ const options = {
 }
 
 let server = null
+let appServerPort = null
 
+const port = parseInt(process.env.PORT, 10) || 3000
 const DEBOUNCE_DELAY = 200
 
-// Generate routes.json for /routes rendering.
-generateRoutesJson()
+const waitUntilPortOpen = async (port = 80) => {
+  const isOpen = await isPortReachable(port)
+  return isOpen || waitUntilPortOpen(port)
+}
 
 // Restart bundled server process.
-const restartServer = _.debounce(async (e) => {
-  // Kill old process.
-  if (server) {
-    await aKill(server.pid)
-  }
+const gracefullyRestartServer = pDebounce(async (e) => {
+  const nextPort = await getPort()
+
+  // Keep current(old) pid before fork next server.
+  const oldPid = server && server.pid
 
   // Fork new server.
-  server = fork(require.resolve('./dist/server/server.js'))
+  server = fork(require.resolve('./dist/server/server.js'), { PORT: nextPort })
 
-  consola.info('Restarted server.')
+  // Loop and wait until nextPort open.
+  await waitUntilPortOpen(nextPort)
+
+  // Re-route traffic to nextPort.
+  appServerPort = nextPort
+
+  // Kill old process after re-route done.
+  if (oldPid) {
+    await aKill(oldPid)
+  }
+
+  return { port: appServerPort }
 }, DEBOUNCE_DELAY)
 
+const getProxyOpts = (port) => ({
+  target: `http://127.0.0.1:${port}`
+})
+
 const main = async () => {
+  const proxy = httpProxy.createProxyServer({})
+
+  const server = http.createServer((req, res) => {
+    if (!appServerPort) {
+      return res.end('Wait until parcel build-end and will boot server.')
+    }
+    // You can define here your custom logic to handle the request
+    // and then proxy the request.
+    proxy.web(req, res, getProxyOpts(appServerPort))
+  })
+
+  //
+  // Listen to the `upgrade` event and proxy the
+  // WebSocket requests as well.
+  // For HMR :)
+  //
+  server.on('upgrade', (req, socket, head) => {
+    proxy.ws(req, socket, head, getProxyOpts(appServerPort))
+  })
+
+  server.listen(port)
+
+  // Loop and wait until nextPort open.
+  await waitUntilPortOpen(port)
+
+  consola.info(`🚀 Dev-only server ready at http://localhost:${port}`)
+
   const bundler = new Bundler([
     'src/server.js'
   ], {
@@ -80,7 +129,7 @@ const main = async () => {
     target: 'node'
   })
 
-  bundler.on('buildEnd', restartServer)
+  bundler.on('buildEnd', gracefullyRestartServer)
 
   consola.debug(`Start watching changes for routes.`)
 
@@ -106,7 +155,9 @@ exitHook(async (cb) => {
   console.debug('\r\nTry to exit with all child process.')
 
   await aKill(pid).catch((err) => {
-    console.error(err)
+    // Debug print error at kill.
+    consola.debug(err)
+    cb()
     return process.exit(1)
   })
 
