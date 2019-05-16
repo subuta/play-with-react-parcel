@@ -94,7 +94,16 @@ const getProxyOpts = (port) => ({
 })
 
 const main = async () => {
-  const proxy = httpProxy.createProxyServer({})
+  const proxy = httpProxy.createProxyServer({ ws: true })
+
+  //
+  // Listen for the `error` event on `proxy`.
+  //
+  proxy.on('error', function (err, req, res) {
+    consola.debug(err)
+    res.writeHead(500, { 'Content-Type': 'text/plain' })
+    res.end('Something went wrong.')
+  })
 
   const server = http.createServer((req, res) => {
     if (!appServerPort) {
