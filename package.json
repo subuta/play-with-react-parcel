@@ -46,7 +46,7 @@
     "koa-router": "^7.4.0",
     "koa-send": "^5.0.0",
     "koa-static": "^5.0.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "pkg-dir": "^4.1.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
