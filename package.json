@@ -38,7 +38,7 @@
     "bluebird": "^3.5.4",
     "common-tags": "^1.8.0",
     "history": "^4.9.0",
-    "http-proxy": "^1.17.0",
+    "http-proxy": "^1.18.1",
     "isomorphic-unfetch": "^3.0.0",
     "koa": "^2.7.0",
     "koa-body": "^4.1.0",
